@@ -14,9 +14,9 @@ import numpy as np
 import scipy.io.wavfile
 import torch
 import torch.utils.data as data
-import torchvision.transforms as transforms
+import torchaudio.transforms as transforms
 from sklearn.preprocessing import LabelEncoder
-
+import torchaudio
 
 class NSynth(data.Dataset):
 
@@ -76,11 +76,12 @@ class NSynth(data.Dataset):
         """
         Args:
             index (int): Index
-        Returns:
+        Return:
             tuple: (audio sample, *categorical targets, json_data)
         """
         name = self.filenames[index]
-        _, sample = scipy.io.wavfile.read(name)
+        #_, sample = scipy.io.wavfile.read(name)
+        sample, sr = torchaudio.load(name)
         target = self.json_data[os.path.splitext(os.path.basename(name))[0]]
         categorical_target = [
             le.transform([target[field]])[0]
